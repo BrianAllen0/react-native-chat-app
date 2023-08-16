@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, View, Text, Button, TextInput, ImageBackground } from "react-native";
+import { StyleSheet, View, Text, Button, TextInput, ImageBackground, TouchableOpacity } from "react-native";
 
 const Start = ({ navigation }) => {
     const [name, setName] = useState("");
@@ -7,11 +7,27 @@ const Start = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <ImageBackground style={[styles.container, styles.backgroundImage]} source={require("../assets/background.png")}>
-                <Text style={styles.appTitle}>Chat App</Text>
+                <Text style={[styles.appTitle, styles.fontPoppins]}>Chat App</Text>
                 <View style={styles.startBox}>
-                    <TextInput style={styles.userNameInput} value={name} onChangeText={setName} placeholder="Your name" />
-
-                    <Button title="Start chatting" onPress={() => navigation.navigate("Chat", { name: name })} />
+                    <TextInput style={[styles.userNameInput, styles.fontPoppins]} value={name} onChangeText={setName} placeholder="Your name" />
+                    <Text style={[styles.paddedSmallBottom, styles.fontPoppins]}>Choose Background Color:</Text>
+                    <View style={styles.span}>
+                        <TouchableOpacity style={styles.spanItem}>
+                            <View style={[styles.circle, styles.colorBlack]}></View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.spanItem}>
+                            <View style={[styles.circle, styles.colorGrey]}></View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.spanItem}>
+                            <View style={[styles.circle, styles.colorSlate]}></View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.spanItem}>
+                            <View style={[styles.circle, styles.colorOlive]}></View>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={styles.startButton} onPress={() => navigation.navigate("Chat", { name: name })}>
+                        <Text style={[styles.fontPoppins, styles.fontWhite]}>Start Chatting</Text>
+                    </TouchableOpacity>
                 </View>
             </ImageBackground>
         </View>
@@ -24,6 +40,32 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    span: {
+        flex: 1,
+        flexGrow: 0,
+        flexBasis: 50,
+        flexDirection: "row",
+        justifyContent: "center",
+    },
+    spanItem: {
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    fontPoppins: {
+        fontFamily: "Poppins",
+    },
+    circle: {
+        minHeight: 50,
+        minWidth: 50,
+        maxHeight: 50,
+        maxWidth: 50,
+        borderRadius: 25,
+    },
+    colorBlack: { backgroundColor: "black" },
+    colorGrey: { backgroundColor: "grey" },
+    colorSlate: { backgroundColor: "lightslategrey" },
+    colorOlive: { backgroundColor: "olive" },
+    fontWhite: { color: "white" },
     backgroundImage: {
         width: "100%",
     },
@@ -31,6 +73,10 @@ const styles = StyleSheet.create({
         flex: 0.56,
         fontSize: 60,
         fontWeight: "600",
+        color: "white",
+    },
+    paddedSmallBottom: {
+        paddingBottom: 15,
     },
     startBox: {
         flex: 0.39,
@@ -38,6 +84,14 @@ const styles = StyleSheet.create({
         width: "88%",
         backgroundColor: "white",
         alignItems: "center",
+    },
+    startButton: {
+        flex: 0.7,
+        marginTop: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        width: "88%",
+        backgroundColor: "dimgray",
     },
     userNameInput: {
         width: "88%",
