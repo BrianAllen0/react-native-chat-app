@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Button, TextInput, ImageBackground, TouchableOp
 
 const Start = ({ navigation }) => {
     const [name, setName] = useState("");
+    const [backgroundColor, setBackgroundColor] = useState("black");
 
     return (
         <View style={styles.container}>
@@ -25,7 +26,10 @@ const Start = ({ navigation }) => {
                             <View style={[styles.circle, styles.colorOlive]}></View>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.startButton} onPress={() => navigation.navigate("Chat", { name: name })}>
+                    <TouchableOpacity
+                        style={styles.startButton}
+                        onPress={() => navigation.navigate("Chat", { name: name, backgroundColor: backgroundColor })}
+                    >
                         <Text style={[styles.fontPoppins, styles.fontWhite]}>Start Chatting</Text>
                     </TouchableOpacity>
                 </View>
@@ -70,7 +74,7 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     appTitle: {
-        flex: 0.56,
+        height: "51%",
         fontSize: 60,
         fontWeight: "600",
         color: "white",
@@ -79,7 +83,6 @@ const styles = StyleSheet.create({
         paddingBottom: 15,
     },
     startBox: {
-        flex: 0.39,
         height: "44%",
         width: "88%",
         backgroundColor: "white",
