@@ -13,16 +13,16 @@ const Start = ({ navigation }) => {
                     <TextInput style={[styles.userNameInput, styles.fontPoppins]} value={name} onChangeText={setName} placeholder="Your name" />
                     <Text style={[styles.paddedSmallBottom, styles.fontPoppins]}>Choose Background Color:</Text>
                     <View style={styles.span}>
-                        <TouchableOpacity style={styles.spanItem}>
+                        <TouchableOpacity onPress={() => setBackgroundColor("black")} style={styles.spanItem}>
                             <View style={[styles.circle, styles.colorBlack]}></View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.spanItem}>
+                        <TouchableOpacity onPress={() => setBackgroundColor("grey")} style={styles.spanItem}>
                             <View style={[styles.circle, styles.colorGrey]}></View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.spanItem}>
+                        <TouchableOpacity onPress={() => setBackgroundColor("lightslategrey")} style={styles.spanItem}>
                             <View style={[styles.circle, styles.colorSlate]}></View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.spanItem}>
+                        <TouchableOpacity onPress={() => setBackgroundColor("olive")} style={styles.spanItem}>
                             <View style={[styles.circle, styles.colorOlive]}></View>
                         </TouchableOpacity>
                     </View>
@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
         alignItems: "center",
         justifyContent: "center",
+        height: 20,
         width: "88%",
         backgroundColor: "dimgray",
     },
