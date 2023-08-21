@@ -1,5 +1,16 @@
 import { useState } from "react";
-import { StyleSheet, View, Text, Button, TextInput, ImageBackground, TouchableOpacity } from "react-native";
+import {
+    StyleSheet,
+    View,
+    Text,
+    Button,
+    TextInput,
+    ImageBackground,
+    TouchableOpacity,
+    accessibilityHint,
+    accessibilityLabel,
+    accessibilityRole,
+} from "react-native";
 
 const Start = ({ navigation }) => {
     const [name, setName] = useState("");
@@ -28,10 +39,15 @@ const Start = ({ navigation }) => {
                     </View>
                     <TouchableOpacity
                         style={styles.startButton}
+                        accessible={true}
+                        accessibilityLabel="Start button"
+                        accessibilityHint="Enter the chat with your chosen name."
+                        accessibilityRole="button"
                         onPress={() => navigation.navigate("Chat", { name: name, backgroundColor: backgroundColor })}
                     >
                         <Text style={[styles.fontPoppins, styles.fontWhite]}>Start Chatting</Text>
                     </TouchableOpacity>
+                    {Platform.OS === "ios" ? <KeyboardAvoidingView behavior="padding" /> : null}
                 </View>
             </ImageBackground>
         </View>
