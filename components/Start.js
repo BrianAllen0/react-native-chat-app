@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getAuth, signInAnonymously } from "firebase/auth";
 import {
     StyleSheet,
     View,
@@ -15,6 +16,17 @@ import {
 const Start = ({ navigation }) => {
     const [name, setName] = useState("");
     const [backgroundColor, setBackgroundColor] = useState("black");
+    const auth = getAuth();
+
+    const signInUser = () => {
+        signInAnonymously(auth)
+            .then((result) => {
+                navigation.navigate("Chat", { name: name, userID: result.user.uid, backgroundColor: backgroundColor });
+            })
+            .catch((error) => {
+                Alert.alert("Unable to sign in, try again later.");
+            });
+    };
 
     return (
         <View style={styles.container}>
@@ -43,7 +55,7 @@ const Start = ({ navigation }) => {
                         accessibilityLabel="Start button"
                         accessibilityHint="Enter the chat with your chosen name."
                         accessibilityRole="button"
-                        onPress={() => navigation.navigate("Chat", { name: name, backgroundColor: backgroundColor })}
+                        onPress={() => signInUser()}
                     >
                         <Text style={[styles.fontPoppins, styles.fontWhite]}>Start Chatting</Text>
                     </TouchableOpacity>
