@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, KeyboardAvoidingView, Platform } from "react-native";
+import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import { AsyncStorage } from "@react-native-async-storage/async-storage";
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import { useEffect, useState } from "react";
