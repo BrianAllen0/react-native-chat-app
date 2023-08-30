@@ -1,4 +1,5 @@
 import { StyleSheet, View, Text, KeyboardAvoidingView, Platform } from "react-native";
+import { AsyncStorage } from "@react-native-async-storage/async-storage";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import { useEffect, useState } from "react";
 import { collection, getDocs, addDoc, onSnapshot, where, query, orderBy } from "firebase/firestore";
@@ -33,11 +34,16 @@ const Chat = ({ route, navigation, db }) => {
     useEffect(() => {
         navigation.setOptions({ title: name, headerStyle: { backgroundColor: backgroundColor }, headerTintColor: "white" });
         const messageQuery = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-        const unsubMessages = onSnapshot(messageQuery, (documentsSnapshot) => {
+        const unsubMessages = onSnapshot(messageQuery, async (documentsSnapshot) => {
             let newMessages = [];
             documentsSnapshot.forEach((doc) => {
                 newMessages.push({ id: doc.id, ...doc.data(), createdAt: new Date(doc.data().createdAt.toMillis()) });
             });
+            try {
+                await AsyncStorage.setItem("messages", JSON.stringify(newMessages));
+            } catch (error) {
+                console.log(error.message);
+            }
             setMessages(newMessages);
         });
         return () => {
