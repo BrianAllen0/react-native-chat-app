@@ -34,16 +34,12 @@ const Chat = ({ route, navigation, db }) => {
     useEffect(() => {
         navigation.setOptions({ title: name, headerStyle: { backgroundColor: backgroundColor }, headerTintColor: "white" });
         const messageQuery = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-        const unsubMessages = onSnapshot(messageQuery, async (documentsSnapshot) => {
+        const unsubMessages = onSnapshot(messageQuery, (documentsSnapshot) => {
             let newMessages = [];
             documentsSnapshot.forEach((doc) => {
                 newMessages.push({ id: doc.id, ...doc.data(), createdAt: new Date(doc.data().createdAt.toMillis()) });
             });
-            try {
-                await AsyncStorage.setItem("messages", JSON.stringify(newMessages));
-            } catch (error) {
-                console.log(error.message);
-            }
+            cacheMessages(newMessages);
             setMessages(newMessages);
         });
         return () => {
@@ -52,6 +48,14 @@ const Chat = ({ route, navigation, db }) => {
             }
         };
     }, []);
+
+    const cacheMessages = async (messagesToCache) => {
+        try {
+            await AsyncStorage.setItem("messages", JSON.stringify(messagesToCache));
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
     return (
         <View style={styles.container}>
