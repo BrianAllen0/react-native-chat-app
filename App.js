@@ -1,7 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, disableNetwork, enableNetwork } from "firebase/firestore";
+import { useNetInfo } from "@react-native-community/netinfo";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
@@ -21,8 +22,18 @@ export default function App() {
         appId: "1:12273369232:web:965af1733344299d599815",
     };
 
+    const connectionStatus = useNetInfo();
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+
+    useEffect(() => {
+        if (connectionStatus.isConnected === false) {
+            Alert.alert("Connection Lost!");
+            disableNetwork(db);
+        } else if (connectionStatus.isConnected === true) {
+            enableNetwork(db);
+        }
+    }, [connectionStatus.isConnected]);
 
     if (!fontsLoaded) {
         return null;
@@ -32,7 +43,7 @@ export default function App() {
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Start">
                 <Stack.Screen name="Start" component={Start} />
-                <Stack.Screen name="Chat">{(props) => <Chat db={db} {...props} />}</Stack.Screen>
+                <Stack.Screen name="Chat">{(props) => <Chat db={db} isConnected={connectionStatus.isConnected} {...props} />}</Stack.Screen>
             </Stack.Navigator>
         </NavigationContainer>
     );
