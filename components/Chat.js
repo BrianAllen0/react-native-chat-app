@@ -6,7 +6,7 @@ import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import { useEffect, useState } from "react";
 import { collection, getDocs, addDoc, onSnapshot, where, query, orderBy } from "firebase/firestore";
 
-const Chat = ({ route, navigation, db, isConnected }) => {
+const Chat = ({ route, navigation, db, isConnected, storage }) => {
     const [messages, setMessages] = useState([]);
     const [image, setImage] = useState();
     const [location, setLocation] = useState(null);
