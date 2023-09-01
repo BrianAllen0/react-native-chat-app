@@ -1,11 +1,15 @@
 import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import CustomActions from "./CustomActions";
+import MapView from "react-native-maps";
 import { AsyncStorage } from "@react-native-async-storage/async-storage";
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import { useEffect, useState } from "react";
 import { collection, getDocs, addDoc, onSnapshot, where, query, orderBy } from "firebase/firestore";
 
-const Chat = ({ route, navigation, db, isConnected }) => {
+const Chat = ({ route, navigation, db, isConnected, storage }) => {
     const [messages, setMessages] = useState([]);
+    const [image, setImage] = useState();
+    const [location, setLocation] = useState(null);
 
     const { userID } = route.params;
     const { name } = route.params;
@@ -37,6 +41,28 @@ const Chat = ({ route, navigation, db, isConnected }) => {
         } else {
             return null;
         }
+    };
+
+    const renderCustomActions = (props) => {
+        return <CustomActions storage={storage} {...props} />;
+    };
+
+    const renderCustomView = (props) => {
+        const { currentMessage } = props;
+        if (currentMessage.location) {
+            return (
+                <MapView
+                    style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+                    region={{
+                        latitude: currentMessage.location.latitude,
+                        longitude: currentMessage.location.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
+                />
+            );
+        }
+        return null;
     };
 
     useEffect(() => {
@@ -88,6 +114,8 @@ const Chat = ({ route, navigation, db, isConnected }) => {
                 messages={messages}
                 renderBubble={renderBubble}
                 renderInputToolbar={renderInputToolbar}
+                renderActions={renderCustomActions}
+                renderCustomView={renderCustomView}
                 onSend={(message) => onSend(message)}
                 user={{
                     _id: userID,
