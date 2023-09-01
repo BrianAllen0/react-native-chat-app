@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, Alert } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import * as MediaLibrary from "expo-media-library";
+import CustomActions from "./CustomActions";
+import MapView from "react-native-maps";
 import { AsyncStorage } from "@react-native-async-storage/async-storage";
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import { collection, getDocs, addDoc, onSnapshot, where, query, orderBy } from "
 const Chat = ({ route, navigation, db, isConnected }) => {
     const [messages, setMessages] = useState([]);
     const [image, setImage] = useState();
+    const [location, setLocation] = useState(null);
 
     const { userID } = route.params;
     const { name } = route.params;
@@ -40,6 +41,28 @@ const Chat = ({ route, navigation, db, isConnected }) => {
         } else {
             return null;
         }
+    };
+
+    const renderCustomActions = (props) => {
+        return <CustomActions storage={storage} {...props} />;
+    };
+
+    const renderCustomView = (props) => {
+        const { currentMessage } = props;
+        if (currentMessage.location) {
+            return (
+                <MapView
+                    style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+                    region={{
+                        latitude: currentMessage.location.latitude,
+                        longitude: currentMessage.location.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
+                />
+            );
+        }
+        return null;
     };
 
     useEffect(() => {
@@ -85,42 +108,14 @@ const Chat = ({ route, navigation, db, isConnected }) => {
         }
     };
 
-    const pickImage = async () => {
-        let permissions = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-        if (permissions?.granted) {
-            let result = await ImagePicker.launchImageLibraryAsync();
-
-            if (!result.canceled) {
-                setImage(result.assets[0]);
-            } else {
-                setImage(null);
-            }
-        }
-    };
-
-    const takePhoto = async () => {
-        let permissions = await ImagePicker.requestCameraPermissionsAsync();
-
-        if (permissions?.granted) {
-            let result = await ImagePicker.launchCameraAsync();
-
-            if (!result.canceled) {
-                let mediaLibraryPermissions = await MediaLibrary.requestPermissionsAsync();
-
-                if (mediaLibraryPermissions?.granted) await MediaLibrary.saveToLibraryAsync(result.assets[0].uri);
-
-                setImage(result.assets[0]);
-            } else setImage(null);
-        }
-    };
-
     return (
         <View style={styles.container}>
             <GiftedChat
                 messages={messages}
                 renderBubble={renderBubble}
                 renderInputToolbar={renderInputToolbar}
+                renderActions={renderCustomActions}
+                renderCustomView={renderCustomView}
                 onSend={(message) => onSend(message)}
                 user={{
                     _id: userID,
