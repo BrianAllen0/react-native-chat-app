@@ -5,8 +5,16 @@ import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
 
+let actionSheet;
+let pOnSend;
+let pstorage;
+let pUserID;
+
 const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID }) => {
-    const actionSheet = useActionSheet();
+    actionSheet = useActionSheet();
+    pOnSend = onSend;
+    pstorage = storage;
+    pUserID = userID;
 
     return (
         <TouchableOpacity style={styles.container} onPress={onActionPress}>
@@ -20,17 +28,17 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
 const generateReference = (uri) => {
     const timeStamp = new Date().getTime();
     const imageName = uri.split("/")[uri.split("/").length - 1];
-    return `${userID}-${timeStamp}-${imageName}`;
+    return `${pUserID}-${timeStamp}-${imageName}`;
 };
 
 const uploadAndSendImage = async (imageURI) => {
     const uniqueRefString = generateReference(imageURI);
-    const newUploadRef = ref(storage, uniqueRefString);
+    const newUploadRef = ref(pstorage, uniqueRefString);
     const response = await fetch(imageURI);
     const blob = await response.blob();
     uploadBytes(newUploadRef, blob).then(async (snapshot) => {
         const imageURL = await getDownloadURL(snapshot.ref);
-        onSend({ image: imageURL });
+        pOnSend({ image: imageURL });
     });
 };
 
@@ -57,7 +65,7 @@ const getLocation = async () => {
     if (permissions?.granted) {
         const location = await Location.getCurrentPositionAsync({});
         if (location) {
-            onSend({
+            nSend({
                 location: {
                     longitude: location.coords.longitude,
                     latitude: location.coords.latitude,
