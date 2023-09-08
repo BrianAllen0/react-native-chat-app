@@ -46,8 +46,16 @@ const pickImage = async () => {
     let permissions = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissions?.granted) {
         let result = await ImagePicker.launchImageLibraryAsync();
-        if (!result.canceled) await uploadAndSendImage(result.assets[0].uri);
-        else Alert.alert("Permissions haven't been granted.");
+        if (!result.canceled) {
+            console.log("MADE IT");
+            try {
+                await uploadAndSendImage(result.assets[0].uri);
+            } catch (error) {
+                console.log(error);
+            }
+            return;
+        }
+        Alert.alert("Permissions haven't been granted.");
     }
 };
 
