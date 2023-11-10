@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import { StyleSheet, View, Text, Platform, Alert } from "react-native";
 import CustomActions from "./CustomActions";
 import MapView from "react-native-maps";
 import { AsyncStorage } from "@react-native-async-storage/async-storage";
@@ -122,7 +122,6 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
                     name: name,
                 }}
             />
-            {Platform.OS === "android" ? <KeyboardAvoidingView behavior="height" /> : null}
         </View>
     );
 };
